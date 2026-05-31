@@ -48,6 +48,13 @@ multilingual audience).
 No runtime dependencies. The framework uses only standard browser APIs; the build
 and tests use only the Node standard library.
 
+## Reusing the framework
+
+The engines are dependency-free and content-agnostic: the recommender, search, and
+journey modules operate on any themed JSON corpus. The framework can therefore power
+other gated or contemplative content sites — not only this magazine — and the modules
+can be lifted out and used on their own.
+
 ## Try it locally
 
 ```bash
