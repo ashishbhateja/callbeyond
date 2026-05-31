@@ -32,14 +32,6 @@ This open-source project aims to create an AI-powered personalized reading exper
 | index.html | Main magazine landing page |
 | README.md | Project documentation |
 
-## For Developers
-
-Contributions are welcome. This project is being developed with the **OpenAI Codex Security** research program to explore secure, privacy-preserving AI integration for sensitive spiritual content.
-
-## License
-
-Content from The Call Beyond magazine is the property of Sri Aurobindo Ashram, Delhi. This repository serves as a digital distribution platform.
 
 ---
 
-**Visit:** [ashishbhateja.github.io/callbeyond](https://ashishbhateja.github.io/callbeyond/)
