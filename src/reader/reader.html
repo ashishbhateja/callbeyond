@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>The Call Beyond — Reader (open-source framework)</title>
+    <meta
+      name="description"
+      content="Open-source, accessible reading framework for The Call Beyond, with on-device personalization and full-text search."
+    />
+    <link rel="stylesheet" href="reader.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header">
+      <p class="kicker">Open-source reader framework</p>
+      <h1>The Call Beyond</h1>
+      <p class="tagline">
+        A demonstration of the reading experience — personalization and search run
+        entirely in your browser. This page uses sample content; real editions are gated.
+      </p>
+    </header>
+
+    <main id="main">
+      <section aria-labelledby="interests-heading" class="panel">
+        <h2 id="interests-heading">Your interests</h2>
+        <p class="hint">
+          Choose the themes that draw you. Recommendations update immediately and are
+          stored only on this device.
+        </p>
+        <div id="interests" class="chips" role="group" aria-labelledby="interests-heading"></div>
+        <button id="reset-profile" type="button" class="secondary">Clear my profile</button>
+      </section>
+
+      <section aria-labelledby="search-heading" class="panel">
+        <h2 id="search-heading">Search this edition</h2>
+        <label class="visually-hidden" for="search">Search articles</label>
+        <input
+          id="search"
+          type="search"
+          placeholder="Search by word or theme…"
+          autocomplete="off"
+          spellcheck="false"
+        />
+      </section>
+
+      <section aria-labelledby="recommendations-heading" class="panel">
+        <h2 id="recommendations-heading">Reading list</h2>
+        <p id="results-heading" class="results-heading" aria-live="polite">Recommended for you</p>
+        <ul id="results" class="cards"></ul>
+        <ul id="recommendations" hidden></ul>
+      </section>
+
+      <article id="article" class="reading" aria-label="Article" hidden></article>
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        Built as an open-source framework. Content © Sri Aurobindo Ashram, Delhi.
+        Framework code is MIT-licensed — see the repository <code>LICENSE</code>.
+      </p>
+    </footer>
+
+    <!-- Live region for status messages, announced to assistive technology. -->
+    <p id="status" class="visually-hidden" role="status" aria-live="polite"></p>
+
+    <script type="module" src="reader.js"></script>
+  </body>
+</html>

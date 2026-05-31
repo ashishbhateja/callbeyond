@@ -1,0 +1,265 @@
+/*
+ * reader.css — calm, responsive, accessible styling for the reader framework.
+ *
+ * Goals: legible long-form reading, a mobile-first layout that scales up to a
+ * comfortable reading measure, visible keyboard focus, and adequate contrast.
+ * System fonts keep it fast and dependency-free.
+ */
+
+:root {
+  --ink: #1c1a17;
+  --ink-soft: #4a463f;
+  --paper: #fbfaf7;
+  --surface: #ffffff;
+  --line: #e7e2d8;
+  --accent: #7a5d3a; /* warm, low-key — not a brand shout */
+  --accent-ink: #ffffff;
+  --focus: #1857c4;
+  --measure: 38rem; /* comfortable reading width */
+  --radius: 10px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ink: #ece8e1;
+    --ink-soft: #b6b0a4;
+    --paper: #16140f;
+    --surface: #201d17;
+    --line: #34302a;
+    --accent: #d8b787;
+    --accent-ink: #16140f;
+    --focus: #8ab4ff;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 1.05rem/1.65 system-ui, -apple-system, "Segoe UI", Roboto, Georgia, serif;
+  padding: 0 1rem 4rem;
+}
+
+main,
+.site-header,
+.site-footer {
+  max-width: var(--measure);
+  margin-inline: auto;
+}
+
+/* --- header ------------------------------------------------------------ */
+
+.site-header {
+  padding: 2.5rem 0 1rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.kicker {
+  margin: 0;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.site-header h1 {
+  margin: 0.2rem 0;
+  font-size: clamp(1.8rem, 5vw, 2.6rem);
+  font-weight: 600;
+}
+
+.tagline,
+.hint {
+  color: var(--ink-soft);
+}
+
+/* --- panels ------------------------------------------------------------ */
+
+.panel {
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.panel h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+}
+
+.results-heading {
+  margin: 0 0 0.75rem;
+  font-weight: 600;
+}
+
+/* --- interest chips ---------------------------------------------------- */
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  cursor: pointer;
+  user-select: none;
+}
+
+.chip:has(input:checked) {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, var(--surface));
+}
+
+/* --- search ------------------------------------------------------------ */
+
+#search {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  font-size: 1rem;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+/* --- cards ------------------------------------------------------------- */
+
+.cards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+}
+
+.card {
+  padding: 1.1rem 1.2rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.card h3 {
+  margin: 0 0 0.25rem;
+  font-size: 1.15rem;
+}
+
+.card p {
+  margin: 0.35rem 0;
+}
+
+.meta {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+.why {
+  font-size: 0.85rem;
+  color: var(--accent);
+  font-style: italic;
+}
+
+/* --- reading view ------------------------------------------------------ */
+
+.reading {
+  padding: 2rem 0;
+}
+
+.reading h2 {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  margin: 0 0 0.4rem;
+}
+
+.reading .body p {
+  margin: 0 0 1.1rem;
+}
+
+/* --- buttons ----------------------------------------------------------- */
+
+button {
+  font: inherit;
+}
+
+.link {
+  border: 0;
+  background: none;
+  padding: 0;
+  color: var(--accent);
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.secondary {
+  padding: 0.45rem 0.9rem;
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+/* --- footer ------------------------------------------------------------ */
+
+.site-footer {
+  padding: 2rem 0 0;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+/* --- accessibility ----------------------------------------------------- */
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  padding: 0.6rem 1rem;
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-radius: 0 0 var(--radius) 0;
+  z-index: 10;
+}
+
+.skip-link:focus {
+  left: 0;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}

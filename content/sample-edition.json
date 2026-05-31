@@ -1,0 +1,79 @@
+{
+  "edition": "Sample Edition",
+  "issue": "development-only",
+  "note": "This is synthetic placeholder content used only to develop and demonstrate the open-source reader framework. It is NOT magazine content. Actual editions of The Call Beyond are gated; see content/README.md.",
+  "articles": [
+    {
+      "id": "the-aim-of-integral-yoga",
+      "title": "The Aim of Integral Yoga",
+      "author": "Editorial",
+      "themes": ["Integral Yoga", "Sadhana"],
+      "readingTime": 7,
+      "summary": "An orientation to the integral path: not withdrawal from life but its transformation, taking up body, mind, and spirit together rather than discarding any of them.",
+      "body": "The integral path begins from a simple refusal to divide existence into the sacred and the discarded. Where older disciplines asked the seeker to renounce the world to find the spirit, the integral aim is to bring the spirit into the world and let it remake the instruments of living. This sample article exists only to exercise the reader framework; it carries no editorial authority and reproduces no published text."
+    },
+    {
+      "id": "silence-before-speech",
+      "title": "Silence Before Speech",
+      "author": "Editorial",
+      "themes": ["Sadhana", "Contemplative Practice"],
+      "readingTime": 5,
+      "summary": "A short reflection on inner quiet as the ground from which considered action arises, written as placeholder copy for development.",
+      "body": "Quiet is treated here not as absence but as a fuller kind of attention. The placeholder argument runs that speech and action gain weight when they issue from stillness rather than from reaction. Replace this body with real edition content at build time."
+    },
+    {
+      "id": "vedanta-and-the-modern-mind",
+      "title": "Vedanta and the Modern Mind",
+      "author": "Editorial",
+      "themes": ["Indian Philosophy", "Vedanta"],
+      "readingTime": 9,
+      "summary": "How classical non-dual thought meets contemporary questions of meaning, identity, and work. Synthetic sample text.",
+      "body": "The placeholder essay sketches a meeting point between non-dual metaphysics and the everyday pressures of modern life. It is deliberately generic so that it can stand in for any themed article while the framework is built and tested."
+    },
+    {
+      "id": "the-mother-on-equanimity",
+      "title": "On Equanimity",
+      "author": "Editorial",
+      "themes": ["Contemporary Spirituality", "Contemplative Practice"],
+      "readingTime": 6,
+      "summary": "Equanimity framed as a practiced steadiness rather than indifference. Development placeholder only.",
+      "body": "Steadiness here means a level base of feeling that neither suppresses emotion nor is ruled by it. As with the other sample entries, the text is invented for testing and should be swapped for gated edition content in production."
+    },
+    {
+      "id": "art-as-an-offering",
+      "title": "Art as an Offering",
+      "author": "Editorial",
+      "themes": ["Cultural Reflections", "Art and Literature"],
+      "readingTime": 8,
+      "summary": "A look at creative work approached as offering rather than performance. Placeholder copy for the sample edition.",
+      "body": "The placeholder considers what changes in the making of art when it is treated as an offering rather than a bid for recognition. The piece exists to give the recommender and search index a Cultural Reflections theme to work with."
+    },
+    {
+      "id": "synthesis-of-the-disciplines",
+      "title": "A Synthesis of the Disciplines",
+      "author": "Editorial",
+      "themes": ["Integral Yoga", "Indian Philosophy", "Synthesis"],
+      "readingTime": 11,
+      "summary": "Why the integral approach gathers rather than ranks the older yogic disciplines. Synthetic development text.",
+      "body": "This longer placeholder discusses the impulse to combine the disciplines of knowledge, devotion, and works instead of treating one as supreme. It carries multiple themes so that theme-overlap scoring can be demonstrated."
+    },
+    {
+      "id": "work-as-sadhana",
+      "title": "Work as Sadhana",
+      "author": "Editorial",
+      "themes": ["Sadhana", "Contemporary Spirituality"],
+      "readingTime": 6,
+      "summary": "Ordinary work reframed as a field of practice. Placeholder content for the open-source demo.",
+      "body": "The sample text proposes that the quality of attention brought to ordinary work matters more than its visible scale. Like the rest of this file, it is invented purely to make the reader framework runnable."
+    },
+    {
+      "id": "reading-the-classics-anew",
+      "title": "Reading the Classics Anew",
+      "author": "Editorial",
+      "themes": ["Indian Philosophy", "Art and Literature"],
+      "readingTime": 7,
+      "summary": "On returning to classical texts with fresh questions rather than settled answers. Development placeholder.",
+      "body": "A short placeholder on rereading inherited texts as live questions. Provided so the search index has overlapping vocabulary across several articles to rank."
+    }
+  ]
+}
