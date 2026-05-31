@@ -22,6 +22,7 @@ const els = {
   search: document.getElementById('search'),
   article: document.getElementById('article'),
   reset: document.getElementById('reset-profile'),
+  themeToggle: document.getElementById('theme-toggle'),
   arcSection: document.getElementById('arc-section'),
   arcCurrent: document.getElementById('arc-current'),
   arcMovements: document.getElementById('arc-movements'),
@@ -37,6 +38,7 @@ init();
 
 async function init() {
   try {
+    setupTheme(); // apply saved high-contrast preference before first paint
     const { edition, arc: loadedArc } = await loadData();
     articles = edition.articles ?? [];
     arc = loadedArc;
@@ -58,6 +60,32 @@ async function init() {
     );
     console.error(err);
   }
+}
+
+/** Apply and persist the reader's high-contrast preference. */
+function setupTheme() {
+  const KEY = 'callbeyond.reader.theme.v1';
+  let on = false;
+  try {
+    on = localStorage.getItem(KEY) === 'contrast';
+  } catch {
+    /* storage unavailable — default to off */
+  }
+  const apply = () => {
+    document.documentElement.dataset.theme = on ? 'contrast' : '';
+    els.themeToggle?.setAttribute('aria-pressed', String(on));
+  };
+  apply();
+  els.themeToggle?.addEventListener('click', () => {
+    on = !on;
+    try {
+      localStorage.setItem(KEY, on ? 'contrast' : 'default');
+    } catch {
+      /* ignore write failures */
+    }
+    apply();
+    announce(on ? 'High-contrast mode on.' : 'High-contrast mode off.');
+  });
 }
 
 /** Load the edition and (optionally) the editorial arc. */

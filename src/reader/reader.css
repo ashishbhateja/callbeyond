@@ -32,6 +32,18 @@
   }
 }
 
+/* Manual high-contrast theme (toggle in the header) — wins over light and dark. */
+:root[data-theme='contrast'] {
+  --ink: #000000;
+  --ink-soft: #161616;
+  --paper: #ffffff;
+  --surface: #ffffff;
+  --line: #000000;
+  --accent: #0b3d91;
+  --accent-ink: #ffffff;
+  --focus: #0b3d91;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -56,6 +68,28 @@ main,
 .site-header {
   padding: 2.5rem 0 1rem;
   border-bottom: 1px solid var(--line);
+}
+
+.site-controls {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 0.5rem;
+}
+
+.theme-toggle {
+  padding: 0.35rem 0.8rem;
+  font-size: 0.85rem;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.theme-toggle[aria-pressed='true'] {
+  color: var(--accent-ink);
+  background: var(--accent);
+  border-color: var(--accent);
 }
 
 .kicker {

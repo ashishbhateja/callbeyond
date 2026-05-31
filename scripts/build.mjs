@@ -85,6 +85,7 @@ function page(manifest, css, script) {
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
     <header class="site-header">
+      <div class="site-controls"><button id="theme-toggle" type="button" class="theme-toggle" aria-pressed="false">High contrast</button></div>
       <h1>The Call Beyond</h1>
       <p class="tagline">${escapeHtml(manifest.edition ?? '')}</p>
     </header>

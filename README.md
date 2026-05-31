@@ -93,6 +93,11 @@ Contributions to the framework are welcome — see
 [`CONTRIBUTING.md`](CONTRIBUTING.md). Please don't commit magazine content; develop
 against the sample edition.
 
+## Security
+
+The framework is static, dependency-free, and keeps all reader data on-device.
+See [`SECURITY.md`](SECURITY.md) for the threat model and how to report issues.
+
 ## License
 
 The framework code is released under the [MIT License](LICENSE). Magazine content
