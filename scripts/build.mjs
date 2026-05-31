@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * build.mjs — assemble a single, self-contained edition page from the open
- * reader framework plus one content manifest.
+ * reader framework plus one content manifest (and the editorial arc, if present).
  *
  * This is the pipeline that keeps the framework open while the content stays
  * gated: the open `src/` is inlined into one HTML file together with a specific
@@ -26,16 +26,20 @@ async function main() {
   const manifestPath = process.argv[2] ?? 'content/sample-edition.json';
   const manifest = JSON.parse(await readFile(resolve(root, manifestPath), 'utf8'));
 
-  const [css, personalize, search, reader] = await Promise.all([
+  const [css, personalize, search, journey, reader] = await Promise.all([
     readFile(resolve(root, 'src/reader/reader.css'), 'utf8'),
     readFile(resolve(root, 'src/personalize.js'), 'utf8'),
     readFile(resolve(root, 'src/search.js'), 'utf8'),
+    readFile(resolve(root, 'src/journey.js'), 'utf8'),
     readFile(resolve(root, 'src/reader/reader.js'), 'utf8'),
   ]);
 
-  // Inline the modules and embed the edition so the result is a single file
-  // with no network dependencies — friendly to gating and offline reading.
-  const bundled = inlineModules({ personalize, search, reader }, manifest);
+  // The editorial arc is optional; embed it if present so the journey view works.
+  const arc = await readFile(resolve(root, 'content/2026-arc.json'), 'utf8')
+    .then(JSON.parse)
+    .catch(() => null);
+
+  const bundled = inlineModules({ personalize, search, journey, reader }, manifest, arc);
   const html = page(manifest, css, bundled);
 
   const issue = sanitize(manifest.issue || manifest.edition || 'edition');
@@ -45,22 +49,25 @@ async function main() {
 
   console.log(`Built ${outPath}`);
   console.log(`  ${manifest.articles?.length ?? 0} articles from "${manifest.edition}"`);
+  if (arc) console.log(`  arc embedded: ${arc.months?.length ?? 0} months`);
   console.log('\nTo publish as a gated edition, encrypt the output:');
   console.log(`  npx staticrypt "${outPath}" --short -d dist/`);
 }
 
-/** Resolve the three modules' imports into one inline script + embedded data. */
-function inlineModules({ personalize, search, reader }, manifest) {
+/** Resolve the modules' ES imports into one inline script + embedded data. */
+function inlineModules({ personalize, search, journey, reader }, manifest, arc) {
   const stripExports = (src) => src.replace(/^export\s+/gm, '');
   const readerInline = reader
     .replace(/^import[^;]+;\s*$/gm, '') // drop ES imports; modules are inlined
-    .replace(/const EDITION_URL[^;]+;/, '') // edition is embedded, not fetched
-    .replace(/await loadEdition\(EDITION_URL\)/, 'EMBEDDED_EDITION');
+    .replace(/^const \w+_URL = new URL[^;]+;\s*$/gm, '') // data is embedded, not fetched
+    .replace(/await loadData\(\)/, '{ edition: EMBEDDED_EDITION, arc: EMBEDDED_ARC }');
 
   return [
     `const EMBEDDED_EDITION = ${JSON.stringify(manifest)};`,
+    `const EMBEDDED_ARC = ${JSON.stringify(arc)};`,
     stripExports(personalize),
     stripExports(search),
+    stripExports(journey),
     readerInline,
   ].join('\n\n');
 }
@@ -82,6 +89,11 @@ function page(manifest, css, script) {
       <p class="tagline">${escapeHtml(manifest.edition ?? '')}</p>
     </header>
     <main id="main">
+      <section id="arc-section" class="panel"><h2 id="arc-heading">The 2026 arc</h2>
+        <div id="arc-current" class="arc-current"></div>
+        <div id="arc-movements" class="arc-movements"></div>
+        <div id="arc-detail" class="arc-detail" role="region" aria-label="Selected month" hidden></div>
+      </section>
       <section class="panel"><h2 id="interests-heading">Your interests</h2>
         <div id="interests" class="chips" role="group" aria-labelledby="interests-heading"></div>
         <button id="reset-profile" type="button" class="secondary">Clear my profile</button>

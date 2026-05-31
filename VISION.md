@@ -18,8 +18,10 @@ Indian scriptures from something you *read* into something you can *work with*.
   archive and the scriptures it draws on, so a seeker can ask a real question —
   *"what does integral yoga say about doubt?"* — and be led back into the source
   material, **with citations, never invented answers.**
-- **Thematic journeys.** Curated, adaptive paths through the archive for someone
-  new to the philosophy, meeting them where they are.
+- **Thematic journeys.** Curated, adaptive paths through the year and the archive
+  for someone new to the philosophy. A first journey — the **2026 editorial arc**
+  (three movements, twelve themed months, festival anchors, the January⇄December
+  mirror) — is already in the reader; richer, personalized paths come next.
 - **A wider, younger audience.** Short dynamic entry points, multiple languages,
   and accessible-by-default design — so the material reaches seekers who would
   never pick up a print magazine.

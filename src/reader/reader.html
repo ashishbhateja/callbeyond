@@ -23,6 +23,17 @@
     </header>
 
     <main id="main">
+      <section id="arc-section" aria-labelledby="arc-heading" class="panel">
+        <h2 id="arc-heading">The 2026 arc</h2>
+        <p class="hint">
+          The year as one journey in three movements. Pick a month to see its theme,
+          its anchor, and the readings that carry it.
+        </p>
+        <div id="arc-current" class="arc-current"></div>
+        <div id="arc-movements" class="arc-movements"></div>
+        <div id="arc-detail" class="arc-detail" role="region" aria-label="Selected month" hidden></div>
+      </section>
+
       <section aria-labelledby="interests-heading" class="panel">
         <h2 id="interests-heading">Your interests</h2>
         <p class="hint">
@@ -49,7 +60,6 @@
         <h2 id="recommendations-heading">Reading list</h2>
         <p id="results-heading" class="results-heading" aria-live="polite">Recommended for you</p>
         <ul id="results" class="cards"></ul>
-        <ul id="recommendations" hidden></ul>
       </section>
 
       <article id="article" class="reading" aria-label="Article" hidden></article>

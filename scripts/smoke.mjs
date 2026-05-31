@@ -11,11 +11,13 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Personalizer, collectThemes, normalizeTheme } from '../src/personalize.js';
 import { SearchIndex, tokenize } from '../src/search.js';
+import { asMovements, monthByNumber, movementOf, mirrorOf, currentMonth } from '../src/journey.js';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const { articles } = JSON.parse(
   await readFile(resolve(root, 'content/sample-edition.json'), 'utf8'),
 );
+const arc = JSON.parse(await readFile(resolve(root, 'content/2026-arc.json'), 'utf8'));
 
 let passed = 0;
 const check = (name, fn) => {
@@ -76,6 +78,30 @@ check('tokenize drops stop words and single characters', () => {
 
 check('searching before build throws a clear error', () => {
   assert.throws(() => new SearchIndex().search('x'), /before build/);
+});
+
+console.log('journey.js');
+
+check('arc covers all twelve months across three movements', () => {
+  const movements = asMovements(arc);
+  assert.equal(movements.length, 3);
+  const months = movements.flatMap((m) => m.monthList.map((x) => x.number));
+  assert.deepEqual([...months].sort((a, b) => a - b), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+});
+
+check('a month resolves to its theme and movement', () => {
+  const may = monthByNumber(arc, 5);
+  assert.equal(may.theme, 'Discernment');
+  assert.equal(movementOf(arc, may).id, 'ground');
+});
+
+check('January and December mirror each other', () => {
+  assert.equal(mirrorOf(arc, 1).number, 12);
+  assert.equal(mirrorOf(arc, 12).number, 1);
+});
+
+check('currentMonth maps a date onto the arc', () => {
+  assert.equal(currentMonth(arc, new Date(2026, 7, 15)).theme, 'Emergence');
 });
 
 console.log(`\n${passed} checks passed.`);

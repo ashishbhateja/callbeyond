@@ -36,9 +36,11 @@ under the Ashram's control. The two layers meet only at build time.
 |------|-------|-----------|
 | `src/personalize.js` | framework | On-device recommender. Transparent scoring, explainable results, no backend. |
 | `src/search.js` | framework | Client-side full-text search (inverted index + TF-IDF). |
+| `src/journey.js` | framework | The editorial-arc engine — the year as one journey in three movements. |
 | `src/reader/` | framework | The reader UI: `reader.html`, `reader.css`, `reader.js`. |
 | `scripts/build.mjs` | framework | Assembles one edition into a self-contained page; prints the gating command. |
 | `content/sample-edition.json` | content | Synthetic placeholder content for development only. |
+| `content/2026-arc.json` | content | The 2026 editorial arc (months, themes, anchors); drives the journey view. |
 | `content/` (real editions) | content | Gated — supplied at build time, **not** committed. |
 | `index.html` (root) | published | The currently published, gated edition (a StaticCrypt artifact). |
 | `dist/` | generated | Build output; not committed. |

@@ -1,0 +1,44 @@
+{
+  "year": 2026,
+  "title": "The Shape of the Year",
+  "intro": "Three natural movements. January to May is the seeker finding their own ground. June to August is the soul's encounter with Presence. September to December is the life that has been touched carrying itself forward.",
+  "movements": [
+    {
+      "id": "ground",
+      "title": "Finding the Ground",
+      "months": [1, 2, 3, 4, 5],
+      "blurb": "The seeker finding their own ground — gratitude, aspiration, walk, fruit, sight."
+    },
+    {
+      "id": "presence",
+      "title": "The Encounter with Presence",
+      "months": [6, 7, 8],
+      "blurb": "What abides, the silence in which it is felt, and the emergence that shows it forth."
+    },
+    {
+      "id": "forward",
+      "title": "Carrying It Forward",
+      "months": [9, 10, 11, 12],
+      "blurb": "The daily work, the quiet battle, the descent of grace, and the yielded completion."
+    }
+  ],
+  "mirror": {
+    "a": 1,
+    "b": 12,
+    "note": "January's Gratitude is the opening; December's Gratitude Returned is the closing that is also, quietly, the next opening."
+  },
+  "months": [
+    { "number": 1, "name": "January", "theme": "Gratitude", "key": "the soil", "movement": "ground", "anchors": [{ "name": "New Year" }], "note": "The year opens. Gratitude as the ground from which the arc unfolds.", "mirrors": 12 },
+    { "number": 2, "name": "February", "theme": "Aspiration", "key": "the flame", "movement": "ground", "anchors": [], "note": "The flame lit on the gratitude soil — yearning, longing, the first call inward." },
+    { "number": 3, "name": "March", "theme": "Peace and Progress", "key": "the walk", "movement": "ground", "anchors": [], "note": "The seeker begins to walk. Peace as the ground of progress, not its opposite." },
+    { "number": 4, "name": "April", "theme": "Renewal", "key": "the fruit", "movement": "ground", "anchors": [{ "name": "Spring renewal" }], "note": "First fruit of the walk — the fresh life that follows steadiness." },
+    { "number": 5, "name": "May", "theme": "Discernment", "key": "the sight", "movement": "ground", "anchors": [{ "name": "Buddha Purnima", "date": "1 May" }], "note": "The seeker now sees. Discernment as the Buddha's particular gift to the path." },
+    { "number": 6, "name": "June", "theme": "Presence", "key": "what abides", "movement": "presence", "anchors": [], "note": "After sight, the encounter — what abides when seeing falls quiet." },
+    { "number": 7, "name": "July", "theme": "Silence", "key": "the medium", "movement": "presence", "anchors": [], "note": "Presence is felt only in silence. The year's quietest issue." },
+    { "number": 8, "name": "August", "theme": "Emergence", "key": "the showing forth", "movement": "presence", "anchors": [{ "name": "Sri Aurobindo's Birth Anniversary", "date": "15 August" }, { "name": "Arya centenary" }, { "name": "Independence Day", "date": "15 August" }], "note": "The triple anchor — heaviest issue of the year. Three threads held as one emergence." },
+    { "number": 9, "name": "September", "theme": "The Work", "key": "daily practice", "movement": "forward", "anchors": [], "note": "After the high emergence — the return to ordinary days. The Work is what sustains." },
+    { "number": 10, "name": "October", "theme": "The Quiet Battle", "key": "inner dharma", "movement": "forward", "anchors": [{ "name": "Dussehra", "date": "19 October" }], "note": "The inner dharma. Dussehra read inward — the battle is not against another but within." },
+    { "number": 11, "name": "November", "theme": "Descent", "key": "the light that comes down", "movement": "forward", "anchors": [{ "name": "Diwali", "date": "8 November" }, { "name": "Mother's Mahasamadhi", "date": "17 November" }, { "name": "Siddhi Day", "date": "24 November" }], "note": "Three anchors held together as one descent — the heaviest issue of the second half." },
+    { "number": 12, "name": "December", "theme": "Gratitude Returned", "key": "what the year has become", "movement": "forward", "anchors": [{ "name": "Sri Aurobindo's Mahasamadhi", "date": "5 December" }, { "name": "Year-end Meditation", "date": "31 December" }], "note": "The closing that mirrors January — but in a different key. Gratitude is no longer a response to gifts received; it is a recognition that the entire year was grace.", "mirrors": 1 }
+  ]
+}

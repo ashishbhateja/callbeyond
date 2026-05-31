@@ -184,6 +184,128 @@ main,
   margin: 0 0 1.1rem;
 }
 
+/* --- the year's arc ---------------------------------------------------- */
+
+.arc-now {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  width: 100%;
+  text-align: left;
+  padding: 0.9rem 1.1rem;
+  margin-bottom: 1.25rem;
+  background: color-mix(in srgb, var(--accent) 10%, var(--surface));
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.arc-now-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.arc-now-theme {
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.arc-now-key {
+  font-style: italic;
+  color: var(--ink-soft);
+}
+
+.arc-movement {
+  margin-bottom: 1.5rem;
+}
+
+.arc-movement-title {
+  margin: 0 0 0.15rem;
+  font-size: 1.05rem;
+}
+
+.arc-movement-blurb {
+  margin: 0 0 0.6rem;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+
+.arc-months {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
+  gap: 0.5rem;
+}
+
+.arc-month {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  width: 100%;
+  text-align: left;
+  padding: 0.55rem 0.7rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.arc-month:hover {
+  border-color: var(--accent);
+}
+
+.arc-month.is-current {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, var(--surface));
+}
+
+.arc-month-name {
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.arc-month-theme {
+  font-weight: 600;
+}
+
+.arc-detail {
+  margin-top: 1.25rem;
+  padding: 1.1rem 1.2rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+}
+
+.arc-detail-title {
+  margin: 0 0 0.2rem;
+}
+
+.arc-detail-key {
+  margin: 0 0 0.6rem;
+  font-style: italic;
+  color: var(--ink-soft);
+}
+
+.arc-detail-note {
+  margin: 0 0 0.6rem;
+}
+
+.arc-detail-anchors,
+.arc-detail-mirror {
+  margin: 0.3rem 0 0;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
 /* --- buttons ----------------------------------------------------------- */
 
 button {

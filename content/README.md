@@ -9,6 +9,7 @@ What lives here instead:
 | File | Purpose |
 |------|---------|
 | `sample-edition.json` | Synthetic, clearly-labelled placeholder content used only to develop and demonstrate the reader framework. It is not magazine content. |
+| `2026-arc.json` | The year's editorial arc — months, themes, festival anchors, and the three movements. Powers the journey view. This is the editorial *plan* (theme structure), not article content. |
 
 ## Edition format
 

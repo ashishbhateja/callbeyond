@@ -1,0 +1,20 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      # No dependencies to install — the framework uses only the standard library.
+      - name: Run engine smoke tests
+        run: node scripts/smoke.mjs
+      - name: Verify an edition builds
+        run: node scripts/build.mjs content/sample-edition.json

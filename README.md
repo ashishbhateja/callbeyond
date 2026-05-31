@@ -1,5 +1,7 @@
 # The Call Beyond — Digital Edition
 
+[![CI](https://github.com/ashishbhateja/callbeyond/actions/workflows/ci.yml/badge.svg)](https://github.com/ashishbhateja/callbeyond/actions/workflows/ci.yml)
+
 *The Call Beyond* is the monthly magazine of [Sri Aurobindo Ashram, Delhi](https://www.sriaurobindoashram.net/),
 devoted to the integral philosophy of Sri Aurobindo and the Mother. This
 repository is the **open-source reading framework** behind the magazine's digital
@@ -19,9 +21,10 @@ personalization and search.
 The goal isn't only to *publish* the magazine, but to help a new generation
 *engage* with it — to turn time-tested philosophy and Indian scriptures from
 something you read into something you can actively work with and question. The
-framework below is the foundation; [`VISION.md`](VISION.md) describes where it's
-headed (guided reflections, grounded "ask the texts" Q&A, thematic journeys for
-newcomers, and a wider, younger, multilingual audience).
+framework below is the foundation — including a first **thematic journey**, the 2026
+editorial arc, already in the reader. [`VISION.md`](VISION.md) describes where it's
+headed next (guided reflections, grounded "ask the texts" Q&A, and a wider, younger,
+multilingual audience).
 
 ## What's in the framework
 
@@ -32,6 +35,10 @@ newcomers, and a wider, younger, multilingual audience).
 - **Client-side full-text search** ([`src/search.js`](src/search.js)) — an
   inverted index with TF-IDF ranking over a whole edition, with zero
   dependencies.
+- **The year as a journey** ([`src/journey.js`](src/journey.js), [`content/2026-arc.json`](content/2026-arc.json))
+  — the editorial arc rendered as an interactive path: three movements, twelve
+  themed months, festival anchors, and the January⇄December mirror, with the
+  current month highlighted and linked to its readings.
 - **An accessible reader** ([`src/reader/`](src/reader)) — semantic, keyboard-
   operable, mobile-first, with dark-mode and reduced-motion support.
 - **A reproducible build** ([`scripts/build.mjs`](scripts/build.mjs)) — inlines
@@ -64,6 +71,7 @@ synthetic placeholder content used only for development. Real editions are gated
 |------|-----------|
 | `src/personalize.js` | On-device recommendation engine |
 | `src/search.js` | Client-side full-text search |
+| `src/journey.js` | The editorial-arc engine (the year's "thematic journey") |
 | `src/reader/` | Reader UI — `reader.html`, `reader.css`, `reader.js` |
 | `scripts/build.mjs` | Edition build pipeline |
 | `scripts/smoke.mjs` | Dependency-free tests for the engines |
