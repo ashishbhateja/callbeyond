@@ -1,6 +1,8 @@
 # The Call Beyond — Digital Edition
 
 [![CI](https://github.com/ashishbhateja/callbeyond/actions/workflows/ci.yml/badge.svg)](https://github.com/ashishbhateja/callbeyond/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/ashishbhateja/callbeyond?sort=semver)](https://github.com/ashishbhateja/callbeyond/releases)
+[![License: MIT](https://img.shields.io/badge/License-MIT-informational.svg)](LICENSE)
 
 *The Call Beyond* is the monthly magazine of [Sri Aurobindo Ashram, Delhi](https://www.sriaurobindoashram.net/),
 devoted to the integral philosophy of Sri Aurobindo and the Mother. This

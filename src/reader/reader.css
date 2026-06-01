@@ -209,6 +209,10 @@ main,
   padding: 2rem 0;
 }
 
+.article-close {
+  margin-bottom: 1rem;
+}
+
 .reading h2 {
   font-size: clamp(1.5rem, 4vw, 2rem);
   margin: 0 0 0.4rem;

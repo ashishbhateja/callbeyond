@@ -11,7 +11,7 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Personalizer, collectThemes, normalizeTheme } from '../src/personalize.js';
 import { SearchIndex, tokenize } from '../src/search.js';
-import { asMovements, monthByNumber, movementOf, mirrorOf, currentMonth } from '../src/journey.js';
+import { asMovements, monthByNumber, movementOf, mirrorOf, currentMonth, neighbors } from '../src/journey.js';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const { articles } = JSON.parse(
@@ -102,6 +102,25 @@ check('January and December mirror each other', () => {
 
 check('currentMonth maps a date onto the arc', () => {
   assert.equal(currentMonth(arc, new Date(2026, 7, 15)).theme, 'Emergence');
+});
+
+check('neighbors are the adjacent months, with no wraparound', () => {
+  assert.equal(neighbors(arc, 5).prev.number, 4);
+  assert.equal(neighbors(arc, 5).next.number, 6);
+  assert.equal(neighbors(arc, 1).prev, null);
+  assert.equal(neighbors(arc, 12).next, null);
+});
+
+console.log('personalize.js (more)');
+
+check('reading an article adds the seen penalty and reason', () => {
+  const p = new Personalizer({ storage: null }).setInterests(['Sadhana']);
+  const a = articles.find((x) => x.themes.map((t) => t.toLowerCase()).includes('sadhana'));
+  const before = p.scoreArticle(a).score;
+  p.recordRead(a);
+  const after = p.scoreArticle(a);
+  assert.ok(after.reasons.includes('already read'));
+  assert.ok(after.score < before);
 });
 
 console.log(`\n${passed} checks passed.`);
