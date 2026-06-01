@@ -8,7 +8,7 @@
  * lives in those modules so they can be tested and reused without any UI.
  */
 import { Personalizer, collectThemes } from '../personalize.js';
-import { SearchIndex } from '../search.js';
+import { SearchIndex, snippet } from '../search.js';
 import { asMovements, currentMonth, movementOf, mirrorOf } from '../journey.js';
 
 const EDITION_URL = new URL('../../content/sample-edition.json', import.meta.url);
@@ -247,6 +247,37 @@ function renderList(items) {
   }
 }
 
+/** Render search hits with a highlighted contextual snippet (issue #3). */
+function renderSearchResults(hits) {
+  els.results.replaceChildren();
+  for (const { article, matched } of hits) {
+    const li = document.createElement('li');
+    li.className = 'card';
+
+    const h = document.createElement('h3');
+    const link = document.createElement('button');
+    link.type = 'button';
+    link.className = 'link';
+    link.textContent = article.title;
+    link.addEventListener('click', () => openArticle(article));
+    h.append(link);
+
+    const meta = tag(
+      'p',
+      'meta',
+      [article.author, themeText(article.themes), readingTime(article)].filter(Boolean).join(' · '),
+    );
+    li.append(h, meta);
+
+    const snip = document.createElement('p');
+    snip.className = 'snippet';
+    snip.append(...highlight(snippet(article, matched), matched));
+    li.append(snip);
+
+    els.results.append(li);
+  }
+}
+
 function openArticle(article) {
   personalizer.recordRead(article);
   els.article.hidden = false;
@@ -301,7 +332,7 @@ function onSearch(event) {
   }
   const hits = index.search(query);
   els.resultsHeading.textContent = `Results for “${query}” (${hits.length})`;
-  renderList(hits.map((h) => h.article));
+  renderSearchResults(hits);
 }
 
 function onReset() {
@@ -335,6 +366,26 @@ function readingTime(article) {
 
 function titleCase(s) {
   return String(s).replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+/** Split text into nodes, wrapping matched terms in <mark> (no innerHTML). */
+function highlight(text, terms) {
+  const escaped = (terms ?? [])
+    .map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+    .filter(Boolean);
+  if (!escaped.length) return [document.createTextNode(text)];
+  const re = new RegExp(`(${escaped.join('|')})`, 'gi');
+  const nodes = [];
+  let last = 0;
+  let m;
+  while ((m = re.exec(text)) !== null) {
+    if (m.index > last) nodes.push(document.createTextNode(text.slice(last, m.index)));
+    nodes.push(tag('mark', '', m[0]));
+    last = m.index + m[0].length;
+    if (m.index === re.lastIndex) re.lastIndex += 1; // guard against empty matches
+  }
+  if (last < text.length) nodes.push(document.createTextNode(text.slice(last)));
+  return nodes;
 }
 
 function debounce(fn, ms) {

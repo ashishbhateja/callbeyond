@@ -203,6 +203,19 @@ main,
   font-style: italic;
 }
 
+.snippet {
+  margin: 0.35rem 0 0;
+  font-size: 0.92rem;
+  color: var(--ink-soft);
+}
+
+mark {
+  background: color-mix(in srgb, var(--accent) 22%, transparent);
+  color: inherit;
+  padding: 0 0.1em;
+  border-radius: 2px;
+}
+
 /* --- reading view ------------------------------------------------------ */
 
 .reading {
