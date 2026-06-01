@@ -15,6 +15,6 @@ jobs:
           node-version: 20
       # No dependencies to install — the framework uses only the standard library.
       - name: Run engine smoke tests
-        run: node scripts/smoke.mjs
+        run: npm test
       - name: Verify an edition builds
-        run: node scripts/build.mjs content/sample-edition.json
+        run: npm run build

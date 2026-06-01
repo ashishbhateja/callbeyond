@@ -1,0 +1,30 @@
+{
+  "name": "callbeyond",
+  "version": "0.1.0",
+  "description": "Open-source reading framework for The Call Beyond — on-device personalization, client-side search, and an editorial-arc journey. Dependency-free.",
+  "type": "module",
+  "scripts": {
+    "test": "node scripts/smoke.mjs",
+    "build": "node scripts/build.mjs content/sample-edition.json"
+  },
+  "keywords": [
+    "reading",
+    "magazine",
+    "static-site",
+    "search",
+    "recommendations",
+    "accessibility",
+    "sri-aurobindo",
+    "indian-philosophy"
+  ],
+  "license": "MIT",
+  "author": "Ashish Bhateja",
+  "homepage": "https://ashishbhateja.github.io/callbeyond/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ashishbhateja/callbeyond.git"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

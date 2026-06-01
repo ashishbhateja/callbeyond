@@ -53,6 +53,9 @@ async function init() {
 
     els.search.addEventListener('input', debounce(onSearch, 150));
     els.reset.addEventListener('click', onReset);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeArticle();
+    });
   } catch (err) {
     announce(
       'Could not load the edition. If you opened this file directly, serve the ' +
@@ -249,6 +252,12 @@ function openArticle(article) {
   els.article.hidden = false;
   els.article.replaceChildren();
 
+  const close = document.createElement('button');
+  close.type = 'button';
+  close.className = 'secondary article-close';
+  close.textContent = '← Close';
+  close.addEventListener('click', closeArticle);
+
   const h = tag('h2', '', article.title);
   h.tabIndex = -1;
   const meta = tag(
@@ -262,9 +271,18 @@ function openArticle(article) {
     body.append(tag('p', '', para));
   }
 
-  els.article.append(h, meta, body);
+  els.article.append(close, h, meta, body);
   h.focus();
   renderRecommendations();
+}
+
+/** Close the open article and return focus to the reading list. */
+function closeArticle() {
+  if (els.article.hidden) return;
+  els.article.hidden = true;
+  els.article.replaceChildren();
+  els.resultsHeading.tabIndex = -1;
+  els.resultsHeading.focus();
 }
 
 // --- events --------------------------------------------------------------
