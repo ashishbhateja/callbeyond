@@ -10,7 +10,7 @@ import { readFile } from 'node:fs/promises';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Personalizer, collectThemes, normalizeTheme } from '../src/personalize.js';
-import { SearchIndex, tokenize } from '../src/search.js';
+import { SearchIndex, tokenize, snippet } from '../src/search.js';
 import { asMovements, monthByNumber, movementOf, mirrorOf, currentMonth, neighbors } from '../src/journey.js';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -121,6 +121,28 @@ check('reading an article adds the seen penalty and reason', () => {
   const after = p.scoreArticle(a);
   assert.ok(after.reasons.includes('already read'));
   assert.ok(after.score < before);
+});
+
+console.log('search.js (snippets)');
+
+check('snippet returns a window containing the matched term', () => {
+  const s = snippet({ summary: 'A short reflection on equanimity and steadiness.' }, ['equanimity']);
+  assert.ok(s.toLowerCase().includes('equanimity'));
+});
+
+check('snippet prefers the summary when it also matches', () => {
+  const s = snippet({ summary: 'mentions silence here', body: 'silence again in the body' }, ['silence']);
+  assert.ok(s.includes('mentions'));
+});
+
+check('snippet falls back to the body when the summary has no match', () => {
+  const s = snippet({ summary: 'nothing relevant', body: 'deep in the body lies discernment' }, ['discernment']);
+  assert.ok(s.toLowerCase().includes('discernment'));
+});
+
+check('snippet falls back to the start of the text when nothing matches', () => {
+  const s = snippet({ summary: 'Gratitude as the ground from which the year unfolds.' }, ['absentterm']);
+  assert.ok(s.startsWith('Gratitude'));
 });
 
 console.log(`\n${passed} checks passed.`);

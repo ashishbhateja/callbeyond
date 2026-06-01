@@ -104,3 +104,35 @@ export function tokenize(text) {
     .split(/[^a-z0-9]+/)
     .filter((t) => t.length > 1 && !STOP_WORDS.has(t));
 }
+
+/**
+ * Build a short contextual snippet around the first matched term, for display
+ * beneath a search result. Looks in the summary first, then the body; if no
+ * term is found, falls back to the start of the text.
+ *
+ * @param {{summary?: string, body?: string}} article
+ * @param {string[]} terms lowercased query terms (as returned in `matched`)
+ * @param {{contextChars?: number}} [options]
+ * @returns {string} a trimmed window, with … marking where text was cut
+ */
+export function snippet(article, terms = [], { contextChars = 120 } = {}) {
+  const half = Math.floor(contextChars / 2);
+  for (const text of [article.summary, article.body]) {
+    if (!text) continue;
+    const lower = text.toLowerCase();
+    let idx = -1;
+    for (const t of terms) {
+      const at = lower.indexOf(t);
+      if (at !== -1 && (idx === -1 || at < idx)) idx = at;
+    }
+    if (idx === -1) continue;
+    const start = Math.max(0, idx - half);
+    const end = Math.min(text.length, idx + half);
+    let s = text.slice(start, end).trim();
+    if (start > 0) s = `… ${s}`;
+    if (end < text.length) s = `${s} …`;
+    return s;
+  }
+  const fallback = (article.summary || article.body || '').trim();
+  return fallback.length > contextChars ? `${fallback.slice(0, contextChars).trim()} …` : fallback;
+}
