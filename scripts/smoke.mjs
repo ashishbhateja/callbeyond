@@ -145,4 +145,13 @@ check('snippet falls back to the start of the text when nothing matches', () => 
   assert.ok(s.startsWith('Gratitude'));
 });
 
+check('search matches an author name', () => {
+  const idx = new SearchIndex().build([
+    { title: 'On stillness', themes: ['Silence'], author: 'Nirodbaran', summary: 'x', body: 'y' },
+  ]);
+  const hits = idx.search('Nirodbaran');
+  assert.equal(hits.length, 1);
+  assert.ok(hits[0].matched.includes('nirodbaran'));
+});
+
 console.log(`\n${passed} checks passed.`);
