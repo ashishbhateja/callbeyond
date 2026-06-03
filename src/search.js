@@ -2,7 +2,7 @@
  * search.js — small, dependency-free full-text search for an edition.
  *
  * Builds an in-memory inverted index over each article's title, themes,
- * summary, and body, then ranks matches with TF-IDF plus light field
+ * author, summary, and body, then ranks matches with TF-IDF plus light field
  * weighting (a hit in the title counts for more than one in the body). It is
  * meant for a single edition's worth of articles — hundreds, not millions —
  * which is exactly the scale of a monthly magazine, and it keeps the whole
@@ -15,6 +15,7 @@
 const FIELD_WEIGHTS = Object.freeze({
   title: 3,
   themes: 2,
+  author: 2,
   summary: 1.5,
   body: 1,
 });

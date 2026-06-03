@@ -250,6 +250,10 @@ function renderList(items) {
 /** Render search hits with a highlighted contextual snippet (issue #3). */
 function renderSearchResults(hits) {
   els.results.replaceChildren();
+  if (!hits.length) {
+    els.results.append(tag('li', 'card', 'No articles match that search. Try a broader word or a theme.'));
+    return;
+  }
   for (const { article, matched } of hits) {
     const li = document.createElement('li');
     li.className = 'card';
