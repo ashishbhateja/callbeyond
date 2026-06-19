@@ -107,9 +107,13 @@ export function tokenize(text) {
 }
 
 /**
- * Build a short contextual snippet around the first matched term, for display
- * beneath a search result. Looks in the summary first, then the body; if no
- * term is found, falls back to the start of the text.
+ * Build a short contextual snippet around the best-matching term cluster, for
+ * display beneath a search result. Looks in the summary first, then the body;
+ * if no term is found, falls back to the start of the text.
+ *
+ * For multi-term queries the window is centred on whichever term occurrence
+ * has the most other query terms within reach, so "integral yoga" finds the
+ * spot where both words appear together rather than the earliest lone "yoga".
  *
  * @param {{summary?: string, body?: string}} article
  * @param {string[]} terms lowercased query terms (as returned in `matched`)
@@ -121,14 +125,31 @@ export function snippet(article, terms = [], { contextChars = 120 } = {}) {
   for (const text of [article.summary, article.body]) {
     if (!text) continue;
     const lower = text.toLowerCase();
-    let idx = -1;
+    // Find the term occurrence whose context window covers the most query terms.
+    let bestIdx = -1;
+    let bestCoverage = 0;
     for (const t of terms) {
-      const at = lower.indexOf(t);
-      if (at !== -1 && (idx === -1 || at < idx)) idx = at;
+      let pos = 0;
+      while (true) {
+        const at = lower.indexOf(t, pos);
+        if (at === -1) break;
+        const winStart = Math.max(0, at - half);
+        const winEnd = Math.min(lower.length, at + half);
+        let coverage = 0;
+        for (const t2 of terms) {
+          const f = lower.indexOf(t2, winStart);
+          if (f !== -1 && f < winEnd) coverage++;
+        }
+        if (coverage > bestCoverage || (coverage === bestCoverage && (bestIdx === -1 || at < bestIdx))) {
+          bestCoverage = coverage;
+          bestIdx = at;
+        }
+        pos = at + Math.max(1, t.length);
+      }
     }
-    if (idx === -1) continue;
-    const start = Math.max(0, idx - half);
-    const end = Math.min(text.length, idx + half);
+    if (bestIdx === -1) continue;
+    const start = Math.max(0, bestIdx - half);
+    const end = Math.min(text.length, bestIdx + half);
     let s = text.slice(start, end).trim();
     if (start > 0) s = `… ${s}`;
     if (end < text.length) s = `${s} …`;
