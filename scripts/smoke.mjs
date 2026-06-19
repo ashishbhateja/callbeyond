@@ -154,4 +154,12 @@ check('search matches an author name', () => {
   assert.ok(hits[0].matched.includes('nirodbaran'));
 });
 
+check('snippet for multi-term query centres on the window with most coverage', () => {
+  // 'yoga' appears alone early; 'integral yoga' appears together much later.
+  // The snippet should prefer the cluster where both terms co-occur.
+  const body = 'yoga ' + 'x'.repeat(200) + ' integral yoga here';
+  const s = snippet({ body }, ['integral', 'yoga']);
+  assert.ok(s.toLowerCase().includes('integral'), `snippet should include 'integral'; got: ${s}`);
+});
+
 console.log(`\n${passed} checks passed.`);
