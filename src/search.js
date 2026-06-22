@@ -59,6 +59,44 @@ export class SearchIndex {
   }
 
   /**
+   * Serialize the index to a plain, JSON-safe snapshot that can be written to
+   * disk at build time and later reconstructed with {@link SearchIndex.fromJSON}.
+   * This enables pre-built static indices for archive-wide search without
+   * requiring a client-side rebuild over every edition's articles.
+   * @returns {{ postings: Object<string, Object<string, number>>, docs: Array<object> }}
+   */
+  toJSON() {
+    if (!this._built) throw new Error('SearchIndex.toJSON called before build()');
+    const postings = {};
+    for (const [token, docMap] of this._postings) {
+      postings[token] = Object.fromEntries(docMap);
+    }
+    return { postings, docs: this._docs.slice() };
+  }
+
+  /**
+   * Reconstruct a SearchIndex from a snapshot produced by {@link SearchIndex#toJSON}.
+   * Useful for loading a pre-built index served as a static asset, or for
+   * merging indices across multiple editions into one searchable corpus.
+   * @param {{ postings: Object<string, Object<string, number>>, docs: Array<object> }} snapshot
+   * @returns {SearchIndex}
+   */
+  static fromJSON(snapshot) {
+    const idx = new SearchIndex();
+    idx._docs = snapshot.docs.slice();
+    idx._postings = new Map();
+    for (const [token, docObj] of Object.entries(snapshot.postings)) {
+      const docMap = new Map();
+      for (const [k, v] of Object.entries(docObj)) {
+        docMap.set(Number(k), v);
+      }
+      idx._postings.set(token, docMap);
+    }
+    idx._built = true;
+    return idx;
+  }
+
+  /**
    * Rank articles against a query. AND-biased: documents matching more of the
    * query terms rank above those matching fewer.
    * @param {string} query

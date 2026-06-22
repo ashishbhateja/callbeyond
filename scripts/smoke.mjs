@@ -154,4 +154,24 @@ check('search matches an author name', () => {
   assert.ok(hits[0].matched.includes('nirodbaran'));
 });
 
+console.log('search.js (serialisation)');
+
+check('toJSON throws before build', () => {
+  assert.throws(() => new SearchIndex().toJSON(), /before build/);
+});
+
+check('fromJSON round-trip produces identical search results', () => {
+  const original = new SearchIndex().build(articles);
+  const snapshot = original.toJSON();
+  const clone = SearchIndex.fromJSON(snapshot);
+  assert.deepEqual(clone.search('equanimity'), original.search('equanimity'));
+});
+
+check('snapshot is JSON-safe and survives stringify/parse', () => {
+  const snapshot = new SearchIndex().build(articles).toJSON();
+  const reparsed = JSON.parse(JSON.stringify(snapshot));
+  const idx = SearchIndex.fromJSON(reparsed);
+  assert.ok(idx.search('yoga').length > 0);
+});
+
 console.log(`\n${passed} checks passed.`);
