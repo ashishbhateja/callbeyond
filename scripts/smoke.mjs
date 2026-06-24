@@ -11,7 +11,7 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Personalizer, collectThemes, normalizeTheme } from '../src/personalize.js';
 import { SearchIndex, tokenize, snippet } from '../src/search.js';
-import { asMovements, monthByNumber, movementOf, mirrorOf, currentMonth, neighbors } from '../src/journey.js';
+import { asMovements, monthByNumber, monthsOfMovement, movementOf, mirrorOf, currentMonth, neighbors } from '../src/journey.js';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const { articles } = JSON.parse(
@@ -152,6 +152,31 @@ check('search matches an author name', () => {
   const hits = idx.search('Nirodbaran');
   assert.equal(hits.length, 1);
   assert.ok(hits[0].matched.includes('nirodbaran'));
+});
+
+console.log('personalize.js (normalizeTheme)');
+
+check('normalizeTheme lowercases and trims whitespace', () => {
+  assert.equal(normalizeTheme('  Integral Yoga  '), 'integral yoga');
+});
+
+console.log('journey.js (more)');
+
+check('monthsOfMovement returns the correct months in calendar order', () => {
+  const ground = monthsOfMovement(arc, 'ground');
+  assert.equal(ground.length, 5);
+  assert.deepEqual(
+    ground.map((m) => m.number),
+    [1, 2, 3, 4, 5],
+  );
+});
+
+check('movementOf accepts a month number, not just an object', () => {
+  assert.equal(movementOf(arc, 5).id, 'ground');
+});
+
+check('mirrorOf returns null for a month with no mirror relationship', () => {
+  assert.equal(mirrorOf(arc, 6), null); // June has no mirror
 });
 
 console.log(`\n${passed} checks passed.`);
