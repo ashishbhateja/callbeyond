@@ -127,8 +127,10 @@ export function snippet(article, terms = [], { contextChars = 120 } = {}) {
       if (at !== -1 && (idx === -1 || at < idx)) idx = at;
     }
     if (idx === -1) continue;
-    const start = Math.max(0, idx - half);
-    const end = Math.min(text.length, idx + half);
+    // Slide the window so it always spans contextChars when the text is long
+    // enough, rather than halving when the match is near the start or end.
+    const start = Math.max(0, Math.min(idx - half, text.length - contextChars));
+    const end = Math.min(text.length, start + contextChars);
     let s = text.slice(start, end).trim();
     if (start > 0) s = `… ${s}`;
     if (end < text.length) s = `${s} …`;

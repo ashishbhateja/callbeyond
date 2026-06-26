@@ -154,4 +154,23 @@ check('search matches an author name', () => {
   assert.ok(hits[0].matched.includes('nirodbaran'));
 });
 
+check('snippet fills the full context window when the matched term is near the start', () => {
+  // term at position 0; text is much longer than the default contextChars (120)
+  const body = 'equanimity ' + 'x '.repeat(65); // ~141 chars, term at idx 0
+  const s = snippet({ body }, ['equanimity']);
+  const bare = s.replace(/ …$/, '');
+  // With the fix: window is [0, 120]. Without it: window was only [0, 60].
+  assert.ok(bare.length >= 110, `expected ≥110 chars, got ${bare.length}`);
+});
+
+check('snippet fills the full context window when the matched term is near the end', () => {
+  // term near the end; text is longer than contextChars (120)
+  const prefix = 'x '.repeat(65); // 130 chars
+  const body = prefix + 'equanimity'; // 140 chars, term at idx 130
+  const s = snippet({ body }, ['equanimity']);
+  const bare = s.replace(/^… /, '');
+  // With the fix: window slides back to cover ~120 chars. Without it: only ~70 chars.
+  assert.ok(bare.length >= 110, `expected ≥110 chars, got ${bare.length}`);
+});
+
 console.log(`\n${passed} checks passed.`);
