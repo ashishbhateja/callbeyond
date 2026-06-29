@@ -7,8 +7,10 @@
  */
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
+import { readFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { execFileSync } from 'node:child_process';
 import { Personalizer, collectThemes, normalizeTheme } from '../src/personalize.js';
 import { SearchIndex, tokenize, snippet } from '../src/search.js';
 import { asMovements, monthByNumber, movementOf, mirrorOf, currentMonth, neighbors } from '../src/journey.js';
@@ -152,6 +154,18 @@ check('search matches an author name', () => {
   const hits = idx.search('Nirodbaran');
   assert.equal(hits.length, 1);
   assert.ok(hits[0].matched.includes('nirodbaran'));
+});
+
+console.log('build.mjs');
+
+check('built HTML includes aria-labelledby on all section panels', () => {
+  execFileSync(process.execPath, [resolve(root, 'scripts/build.mjs')], { cwd: root, stdio: 'ignore' });
+  const built = readFileSync(resolve(root, 'dist/development-only.html'), 'utf8');
+  assert.ok(built.includes('aria-labelledby="arc-heading"'), 'arc section missing aria-labelledby');
+  assert.ok(built.includes('aria-labelledby="interests-heading"'), 'interests section missing aria-labelledby');
+  assert.ok(built.includes('aria-labelledby="search-heading"'), 'search section missing aria-labelledby');
+  assert.ok(built.includes('aria-labelledby="recommendations-heading"'), 'reading list section missing aria-labelledby');
+  assert.ok(built.includes('id="recommendations-heading"'), 'reading list h2 missing id');
 });
 
 console.log(`\n${passed} checks passed.`);
