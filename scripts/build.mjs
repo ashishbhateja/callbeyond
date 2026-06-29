@@ -90,20 +90,20 @@ function page(manifest, css, script) {
       <p class="tagline">${escapeHtml(manifest.edition ?? '')}</p>
     </header>
     <main id="main">
-      <section id="arc-section" class="panel"><h2 id="arc-heading">The 2026 arc</h2>
+      <section id="arc-section" aria-labelledby="arc-heading" class="panel"><h2 id="arc-heading">The 2026 arc</h2>
         <div id="arc-current" class="arc-current"></div>
         <div id="arc-movements" class="arc-movements"></div>
         <div id="arc-detail" class="arc-detail" role="region" aria-label="Selected month" hidden></div>
       </section>
-      <section class="panel"><h2 id="interests-heading">Your interests</h2>
+      <section aria-labelledby="interests-heading" class="panel"><h2 id="interests-heading">Your interests</h2>
         <div id="interests" class="chips" role="group" aria-labelledby="interests-heading"></div>
         <button id="reset-profile" type="button" class="secondary">Clear my profile</button>
       </section>
-      <section class="panel"><h2 id="search-heading">Search this edition</h2>
+      <section aria-labelledby="search-heading" class="panel"><h2 id="search-heading">Search this edition</h2>
         <label class="visually-hidden" for="search">Search articles</label>
         <input id="search" type="search" placeholder="Search…" autocomplete="off" />
       </section>
-      <section class="panel"><h2>Reading list</h2>
+      <section aria-labelledby="recommendations-heading" class="panel"><h2 id="recommendations-heading">Reading list</h2>
         <p id="results-heading" class="results-heading" aria-live="polite">Recommended for you</p>
         <ul id="results" class="cards"></ul>
       </section>
