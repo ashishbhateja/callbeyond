@@ -127,8 +127,22 @@ export function snippet(article, terms = [], { contextChars = 120 } = {}) {
       if (at !== -1 && (idx === -1 || at < idx)) idx = at;
     }
     if (idx === -1) continue;
-    const start = Math.max(0, idx - half);
-    const end = Math.min(text.length, idx + half);
+    const rawStart = Math.max(0, idx - half);
+    const rawEnd = Math.min(text.length, idx + half);
+
+    // Snap to word boundaries so the snippet never cuts a word in half.
+    let start = rawStart;
+    if (rawStart > 0) {
+      const nextSpace = text.indexOf(' ', rawStart);
+      if (nextSpace !== -1 && nextSpace < idx) start = nextSpace + 1;
+    }
+    let end = rawEnd;
+    if (rawEnd < text.length) {
+      const prevSpace = text.lastIndexOf(' ', rawEnd - 1);
+      // Guard: don't retreat end past the start of the matched term.
+      if (prevSpace > start && prevSpace > idx) end = prevSpace;
+    }
+
     let s = text.slice(start, end).trim();
     if (start > 0) s = `… ${s}`;
     if (end < text.length) s = `${s} …`;
