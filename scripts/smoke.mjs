@@ -154,4 +154,22 @@ check('search matches an author name', () => {
   assert.ok(hits[0].matched.includes('nirodbaran'));
 });
 
+check('snippet snaps start boundary to a whole word', () => {
+  // rawStart (=5) falls inside 'longprefixword' — snapping advances it to after
+  // the next space so the first visible token is a whole word, not a fragment.
+  const s = snippet({ body: 'longprefixword search endword' }, ['search'], { contextChars: 20 });
+  const clean = s.replace(/^… /, '').replace(/ …$/, '');
+  assert.ok(clean.includes('search'), 'matched term must be in the snippet');
+  assert.ok(!clean.startsWith('r'), 'snippet must not start mid-word ("refixword…")');
+});
+
+check('snippet snaps end boundary to a whole word', () => {
+  // rawEnd (=14) falls inside 'endword' — snapping retreats it to the preceding
+  // space so the last visible token is a whole word, not a fragment.
+  const s = snippet({ body: 'abc search endword' }, ['search'], { contextChars: 20 });
+  const clean = s.replace(/^… /, '').replace(/ …$/, '');
+  assert.ok(clean.includes('search'), 'matched term must be in the snippet');
+  assert.ok(!clean.endsWith('w'), 'snippet must not end mid-word ("endw…")');
+});
+
 console.log(`\n${passed} checks passed.`);
