@@ -154,4 +154,18 @@ check('search matches an author name', () => {
   assert.ok(hits[0].matched.includes('nirodbaran'));
 });
 
+check('snippet centres on the window covering the most distinct terms', () => {
+  // 'silence' appears early (isolated) and again near 'integral' much later.
+  // A window centred on the early occurrence captures only 'silence'; a window
+  // centred near 'integral' captures both.  The improved snippet picks the latter.
+  const filler = 'The way unfolds gradually. '.repeat(4);
+  const s = snippet(
+    { body: `Silence rests here. ${filler}In integral yoga, silence is paramount.` },
+    ['integral', 'silence'],
+    { contextChars: 80 },
+  );
+  assert.ok(s.toLowerCase().includes('integral'), `expected 'integral' in: ${s}`);
+  assert.ok(s.toLowerCase().includes('silence'), `expected 'silence' in: ${s}`);
+});
+
 console.log(`\n${passed} checks passed.`);
