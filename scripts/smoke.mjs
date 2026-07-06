@@ -11,7 +11,7 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Personalizer, collectThemes, normalizeTheme } from '../src/personalize.js';
 import { SearchIndex, tokenize, snippet } from '../src/search.js';
-import { asMovements, monthByNumber, movementOf, mirrorOf, currentMonth, neighbors } from '../src/journey.js';
+import { asMovements, monthByNumber, monthsOfMovement, movementOf, mirrorOf, currentMonth, neighbors } from '../src/journey.js';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const { articles } = JSON.parse(
@@ -145,6 +145,16 @@ check('snippet falls back to the start of the text when nothing matches', () => 
   assert.ok(s.startsWith('Gratitude'));
 });
 
+check('snippet does not cut mid-word at the trailing window edge', () => {
+  // The half-window (30 chars for contextChars=60) ends inside a word without the fix.
+  const body = 'target ' + 'filler '.repeat(20);
+  const s = snippet({ body }, ['target'], { contextChars: 60 });
+  assert.ok(s.endsWith(' …'), 'long text should produce a trailing ellipsis');
+  const beforeMark = s.slice(0, s.lastIndexOf(' …'));
+  const lastWord = beforeMark.split(/\s+/).pop();
+  assert.equal(lastWord, 'filler');
+});
+
 check('search matches an author name', () => {
   const idx = new SearchIndex().build([
     { title: 'On stillness', themes: ['Silence'], author: 'Nirodbaran', summary: 'x', body: 'y' },
@@ -152,6 +162,17 @@ check('search matches an author name', () => {
   const hits = idx.search('Nirodbaran');
   assert.equal(hits.length, 1);
   assert.ok(hits[0].matched.includes('nirodbaran'));
+});
+
+console.log('journey.js (more)');
+
+check("monthsOfMovement returns a movement's months in calendar order", () => {
+  const months = monthsOfMovement(arc, 'ground');
+  assert.deepEqual(months.map((m) => m.number), [1, 2, 3, 4, 5]);
+});
+
+check('mirrorOf returns null for months with no mirror partner', () => {
+  assert.equal(mirrorOf(arc, 6), null);
 });
 
 console.log(`\n${passed} checks passed.`);
