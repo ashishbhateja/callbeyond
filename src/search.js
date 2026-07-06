@@ -128,7 +128,12 @@ export function snippet(article, terms = [], { contextChars = 120 } = {}) {
     }
     if (idx === -1) continue;
     const start = Math.max(0, idx - half);
-    const end = Math.min(text.length, idx + half);
+    let end = Math.min(text.length, idx + half);
+    // Avoid cutting mid-word at the trailing edge of the window.
+    if (end < text.length && /\S/.test(text[end])) {
+      const nextSpace = text.indexOf(' ', end);
+      end = nextSpace !== -1 ? nextSpace : text.length;
+    }
     let s = text.slice(start, end).trim();
     if (start > 0) s = `… ${s}`;
     if (end < text.length) s = `${s} …`;
