@@ -154,6 +154,16 @@ main,
   background: color-mix(in srgb, var(--accent) 12%, var(--surface));
 }
 
+/* Redirect the focus ring from the tiny checkbox to the whole chip. */
+.chip:has(input:focus-visible) {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.chip input:focus-visible {
+  outline: none;
+}
+
 /* --- search ------------------------------------------------------------ */
 
 #search {
