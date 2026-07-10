@@ -11,7 +11,7 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Personalizer, collectThemes, normalizeTheme } from '../src/personalize.js';
 import { SearchIndex, tokenize, snippet } from '../src/search.js';
-import { asMovements, monthByNumber, movementOf, mirrorOf, currentMonth, neighbors } from '../src/journey.js';
+import { asMovements, monthByNumber, monthsOfMovement, movementOf, mirrorOf, currentMonth, neighbors } from '../src/journey.js';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const { articles } = JSON.parse(
@@ -55,6 +55,14 @@ check('reading builds theme affinity even without declared interests', () => {
 check('collectThemes returns a sorted, de-duplicated set', () => {
   const themes = collectThemes(articles);
   assert.deepEqual(themes, [...new Set(themes)].sort());
+});
+
+check('collectThemes deduplicates themes that differ only by case', () => {
+  const themes = collectThemes([
+    { themes: ['Vedanta', 'Sadhana'] },
+    { themes: ['vedanta'] }, // normalises to the same key as 'Vedanta'
+  ]);
+  assert.deepEqual(themes, ['sadhana', 'vedanta']); // 2 items, not 3
 });
 
 console.log('search.js');
@@ -111,6 +119,12 @@ check('neighbors are the adjacent months, with no wraparound', () => {
   assert.equal(neighbors(arc, 12).next, null);
 });
 
+check('monthsOfMovement returns months in calendar order for a movement', () => {
+  const months = monthsOfMovement(arc, 'ground');
+  assert.equal(months.length, 5); // January through May
+  assert.deepEqual(months.map((m) => m.number), [1, 2, 3, 4, 5]);
+});
+
 console.log('personalize.js (more)');
 
 check('reading an article adds the seen penalty and reason', () => {
@@ -143,6 +157,11 @@ check('snippet falls back to the body when the summary has no match', () => {
 check('snippet falls back to the start of the text when nothing matches', () => {
   const s = snippet({ summary: 'Gratitude as the ground from which the year unfolds.' }, ['absentterm']);
   assert.ok(s.startsWith('Gratitude'));
+});
+
+check('snippet with no terms falls back to the start of the text', () => {
+  const s = snippet({ summary: 'Aspiration is the flame lit on the ground of gratitude.' });
+  assert.ok(s.startsWith('Aspiration'));
 });
 
 check('search matches an author name', () => {
