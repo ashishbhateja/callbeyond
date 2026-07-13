@@ -118,7 +118,7 @@ export function tokenize(text) {
  */
 export function snippet(article, terms = [], { contextChars = 120 } = {}) {
   const half = Math.floor(contextChars / 2);
-  for (const text of [article.summary, article.body]) {
+  for (const text of [article.summary, article.body, article.title, article.author]) {
     if (!text) continue;
     const lower = text.toLowerCase();
     let idx = -1;

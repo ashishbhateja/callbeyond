@@ -154,4 +154,18 @@ check('search matches an author name', () => {
   assert.ok(hits[0].matched.includes('nirodbaran'));
 });
 
+check('snippet falls back to the title when only the title contains the matched term', () => {
+  // summary and body do not contain "discernment"; the title does
+  const art = { title: 'On Discernment', summary: 'The month of May.', body: 'Focus.', author: 'Ed' };
+  const s = snippet(art, ['discernment']);
+  assert.ok(s.toLowerCase().includes('discernment'));
+});
+
+check('snippet falls back to the author when only the author contains the matched term', () => {
+  // summary and body are irrelevant placeholders; the author field has the term
+  const art = { title: 'On stillness', summary: 'x', body: 'y', author: 'Nirodbaran' };
+  const s = snippet(art, ['nirodbaran']);
+  assert.ok(s.toLowerCase().includes('nirodbaran'));
+});
+
 console.log(`\n${passed} checks passed.`);
