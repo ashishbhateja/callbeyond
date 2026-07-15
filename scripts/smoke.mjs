@@ -11,7 +11,7 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Personalizer, collectThemes, normalizeTheme } from '../src/personalize.js';
 import { SearchIndex, tokenize, snippet } from '../src/search.js';
-import { asMovements, monthByNumber, movementOf, mirrorOf, currentMonth, neighbors } from '../src/journey.js';
+import { asMovements, monthByNumber, movementOf, mirrorOf, monthsOfMovement, currentMonth, neighbors } from '../src/journey.js';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const { articles } = JSON.parse(
@@ -152,6 +152,54 @@ check('search matches an author name', () => {
   const hits = idx.search('Nirodbaran');
   assert.equal(hits.length, 1);
   assert.ok(hits[0].matched.includes('nirodbaran'));
+});
+
+console.log('journey.js (more)');
+
+check('monthsOfMovement returns the right months in calendar order', () => {
+  const groundMonths = monthsOfMovement(arc, 'ground');
+  assert.deepEqual(
+    groundMonths.map((m) => m.number),
+    [1, 2, 3, 4, 5],
+  );
+  assert.deepEqual(
+    groundMonths.map((m) => m.theme),
+    ['Gratitude', 'Aspiration', 'Peace and Progress', 'Renewal', 'Discernment'],
+  );
+});
+
+check('movementOf accepts a month number directly, not only an object', () => {
+  assert.equal(movementOf(arc, 8).id, 'presence');
+  assert.equal(movementOf(arc, 9).id, 'forward');
+});
+
+check('mirrorOf resolves the reverse direction when only one side declares the link', () => {
+  const minimal = {
+    months: [
+      { number: 1, name: 'January', mirrors: 12 },
+      { number: 12, name: 'December' }, // no mirrors field — reverse lookup required
+    ],
+    movements: [],
+  };
+  assert.equal(mirrorOf(minimal, 12).number, 1);
+  assert.equal(mirrorOf(minimal, 1).number, 12); // forward direction still works
+});
+
+check('mirrorOf returns null for a month that has no mirror partner', () => {
+  assert.equal(mirrorOf(arc, 5), null); // May mirrors nobody
+  assert.equal(mirrorOf(arc, 7), null); // July mirrors nobody
+});
+
+console.log('personalize.js (knownThemes)');
+
+check('knownThemes returns the union of declared interests and implicit affinity', () => {
+  const p = new Personalizer({ storage: null }).setInterests(['Sadhana']);
+  const vedanta = articles.find((a) => a.themes.includes('Vedanta'));
+  p.recordRead(vedanta);
+  const known = p.knownThemes();
+  assert.ok(known.has('sadhana'), 'declared interest should appear');
+  assert.ok(known.has('vedanta'), 'theme from reading history should appear');
+  assert.ok(!known.has('nonexistent'), 'unseen theme should not appear');
 });
 
 console.log(`\n${passed} checks passed.`);
