@@ -285,6 +285,7 @@ function renderSearchResults(hits) {
 function openArticle(article) {
   personalizer.recordRead(article);
   els.article.hidden = false;
+  els.article.setAttribute('aria-label', article.title);
   els.article.replaceChildren();
 
   const close = document.createElement('button');
@@ -315,6 +316,7 @@ function openArticle(article) {
 function closeArticle() {
   if (els.article.hidden) return;
   els.article.hidden = true;
+  els.article.setAttribute('aria-label', 'Article');
   els.article.replaceChildren();
   els.resultsHeading.tabIndex = -1;
   els.resultsHeading.focus();
