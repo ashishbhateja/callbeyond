@@ -11,7 +11,7 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Personalizer, collectThemes, normalizeTheme } from '../src/personalize.js';
 import { SearchIndex, tokenize, snippet } from '../src/search.js';
-import { asMovements, monthByNumber, movementOf, mirrorOf, currentMonth, neighbors } from '../src/journey.js';
+import { asMovements, monthByNumber, monthsOfMovement, movementOf, mirrorOf, currentMonth, neighbors } from '../src/journey.js';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const { articles } = JSON.parse(
@@ -111,6 +111,12 @@ check('neighbors are the adjacent months, with no wraparound', () => {
   assert.equal(neighbors(arc, 12).next, null);
 });
 
+check('monthsOfMovement returns months in calendar order for a movement', () => {
+  const months = monthsOfMovement(arc, 'ground');
+  assert.deepEqual(months.map((m) => m.number), [1, 2, 3, 4, 5]);
+  assert.ok(months.every((m) => m.movement === 'ground'));
+});
+
 console.log('personalize.js (more)');
 
 check('reading an article adds the seen penalty and reason', () => {
@@ -121,6 +127,32 @@ check('reading an article adds the seen penalty and reason', () => {
   const after = p.scoreArticle(a);
   assert.ok(after.reasons.includes('already read'));
   assert.ok(after.score < before);
+});
+
+check('reset clears interests, affinity, and seen state', () => {
+  const p = new Personalizer({ storage: null }).setInterests(['Vedanta']);
+  const a = articles.find((x) => x.themes.map(normalizeTheme).includes('vedanta'));
+  p.recordRead(a);
+  assert.ok(p.interests.size > 0);
+  assert.ok(Object.keys(p.affinity).length > 0);
+  assert.ok(p.seen.size > 0);
+  p.reset();
+  assert.equal(p.interests.size, 0);
+  assert.deepEqual(p.affinity, {});
+  assert.equal(p.seen.size, 0);
+  // The previously read article must appear in fresh recommendations after a reset.
+  const ids = p.recommend(articles, { limit: 20 }).map((x) => x.id);
+  assert.ok(ids.includes(a.id));
+});
+
+check('knownThemes returns the union of declared interests and read-article themes', () => {
+  const p = new Personalizer({ storage: null }).setInterests(['Vedanta']);
+  const sadhana = articles.find((x) => x.themes.map(normalizeTheme).includes('sadhana'));
+  assert.ok(sadhana, 'precondition: sample edition must contain a Sadhana article');
+  p.recordRead(sadhana);
+  const known = p.knownThemes();
+  assert.ok(known.has('vedanta'), 'declared interest is included');
+  assert.ok(known.has('sadhana'), 'theme from reading history is included');
 });
 
 console.log('search.js (snippets)');
