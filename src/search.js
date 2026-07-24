@@ -107,9 +107,14 @@ export function tokenize(text) {
 }
 
 /**
- * Build a short contextual snippet around the first matched term, for display
- * beneath a search result. Looks in the summary first, then the body; if no
- * term is found, falls back to the start of the text.
+ * Build a short contextual snippet around matched terms, for display beneath a
+ * search result. Looks in the summary first, then the body; if no term is
+ * found, falls back to the start of the text.
+ *
+ * For multi-term queries, the window is anchored at the position where the
+ * greatest number of distinct query terms are visible — so "yoga equanimity"
+ * finds the passage where both words cluster, not just where "yoga" first
+ * appears.
  *
  * @param {{summary?: string, body?: string}} article
  * @param {string[]} terms lowercased query terms (as returned in `matched`)
@@ -121,16 +126,39 @@ export function snippet(article, terms = [], { contextChars = 120 } = {}) {
   for (const text of [article.summary, article.body]) {
     if (!text) continue;
     const lower = text.toLowerCase();
-    let idx = -1;
+
+    // Collect every occurrence position for every matched term.
+    const positions = [];
     for (const t of terms) {
-      const at = lower.indexOf(t);
-      if (at !== -1 && (idx === -1 || at < idx)) idx = at;
+      let pos = lower.indexOf(t);
+      while (pos !== -1) {
+        positions.push(pos);
+        pos = lower.indexOf(t, pos + 1);
+      }
     }
-    if (idx === -1) continue;
-    const start = Math.max(0, idx - half);
-    const end = Math.min(text.length, idx + half);
-    let s = text.slice(start, end).trim();
-    if (start > 0) s = `… ${s}`;
+    if (positions.length === 0) continue;
+
+    // Evaluate each occurrence as a candidate anchor; pick the window that
+    // covers the most distinct matched terms.
+    let bestStart = 0;
+    let bestCoverage = 0;
+    for (const pivot of positions) {
+      const start = Math.max(0, pivot - half);
+      const end = start + contextChars;
+      let coverage = 0;
+      for (const t of terms) {
+        const at = lower.indexOf(t, start);
+        if (at !== -1 && at < end) coverage += 1;
+      }
+      if (coverage > bestCoverage) {
+        bestCoverage = coverage;
+        bestStart = start;
+      }
+    }
+
+    const end = Math.min(text.length, bestStart + contextChars);
+    let s = text.slice(bestStart, end).trim();
+    if (bestStart > 0) s = `… ${s}`;
     if (end < text.length) s = `${s} …`;
     return s;
   }
