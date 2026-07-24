@@ -154,4 +154,17 @@ check('search matches an author name', () => {
   assert.ok(hits[0].matched.includes('nirodbaran'));
 });
 
+check('snippet picks the window covering the most terms for multi-term queries', () => {
+  // "yoga" appears early, and again near "equanimity" late in the body.
+  // A 120-char window anchored on the first "yoga" cannot reach "equanimity".
+  // The improved algorithm finds the later cluster where both terms appear.
+  const body =
+    'yoga is first mentioned here in this sentence at the opening of the article. ' +
+    'Many words follow as the essay continues and develops its argument here. ' +
+    'Then yoga and equanimity are discussed together at the close.';
+  const s = snippet({ body }, ['yoga', 'equanimity']);
+  assert.ok(s.toLowerCase().includes('equanimity'), `expected "equanimity" in snippet: ${s}`);
+  assert.ok(s.toLowerCase().includes('yoga'), `expected "yoga" in snippet: ${s}`);
+});
+
 console.log(`\n${passed} checks passed.`);
