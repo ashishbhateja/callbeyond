@@ -11,7 +11,7 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Personalizer, collectThemes, normalizeTheme } from '../src/personalize.js';
 import { SearchIndex, tokenize, snippet } from '../src/search.js';
-import { asMovements, monthByNumber, movementOf, mirrorOf, currentMonth, neighbors } from '../src/journey.js';
+import { asMovements, monthByNumber, monthsOfMovement, movementOf, mirrorOf, currentMonth, neighbors } from '../src/journey.js';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const { articles } = JSON.parse(
@@ -109,6 +109,23 @@ check('neighbors are the adjacent months, with no wraparound', () => {
   assert.equal(neighbors(arc, 5).next.number, 6);
   assert.equal(neighbors(arc, 1).prev, null);
   assert.equal(neighbors(arc, 12).next, null);
+});
+
+check('monthsOfMovement returns the months of a movement in calendar order', () => {
+  const ground = monthsOfMovement(arc, 'ground');
+  assert.deepEqual(ground.map((m) => m.number), [1, 2, 3, 4, 5]);
+  const presence = monthsOfMovement(arc, 'presence');
+  assert.deepEqual(presence.map((m) => m.number), [6, 7, 8]);
+});
+
+check('movementOf resolves correctly when called with a month number', () => {
+  assert.equal(movementOf(arc, 8).id, 'presence');
+  assert.equal(movementOf(arc, 9).id, 'forward');
+});
+
+check('mirrorOf returns null for a month with no mirror partner', () => {
+  assert.equal(mirrorOf(arc, 6), null);
+  assert.equal(mirrorOf(arc, 99), null);
 });
 
 console.log('personalize.js (more)');
