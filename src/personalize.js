@@ -48,7 +48,7 @@ export class Personalizer {
 
     const saved = this._load();
     /** @type {Set<string>} themes the reader opted into */
-    this.interests = new Set(interests ?? saved.interests ?? []);
+    this.interests = new Set((interests ?? saved.interests ?? []).map(normalizeTheme));
     /** @type {Record<string, number>} theme -> affinity weight from history */
     this.affinity = saved.affinity ?? {};
     /** @type {Set<string>} ids of articles the reader has finished */
