@@ -35,6 +35,14 @@ check('declared interest ranks its theme first', () => {
   assert.match(top.reasons.join(' '), /vedanta/i);
 });
 
+check('constructor interests option is normalized identically to setInterests', () => {
+  const viaConstructor = new Personalizer({ interests: ['Vedanta'], storage: null });
+  const viaMethod = new Personalizer({ storage: null }).setInterests(['Vedanta']);
+  const topViaConstructor = viaConstructor.recommend(articles, { limit: 1 })[0];
+  const topViaMethod = viaMethod.recommend(articles, { limit: 1 })[0];
+  assert.equal(topViaConstructor.id, topViaMethod.id);
+});
+
 check('reading an article removes it from fresh recommendations', () => {
   const p = new Personalizer({ storage: null }).setInterests(['Sadhana']);
   const top = p.recommend(articles, { limit: 1 })[0];
