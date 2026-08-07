@@ -60,7 +60,10 @@ export class SearchIndex {
 
   /**
    * Rank articles against a query. AND-biased: documents matching more of the
-   * query terms rank above those matching fewer.
+   * query terms rank above those matching fewer. Falls back to prefix matching
+   * when a term has no exact entry in the index, so live-as-you-type search
+   * returns results before the user has finished typing a word. Prefix matches
+   * are discounted proportionally to how much of the token was typed.
    * @param {string} query
    * @param {{limit?: number}} [options]
    * @returns {Array<{ article: object, score: number, matched: string[] }>}
@@ -75,14 +78,14 @@ export class SearchIndex {
     const hits = new Map();
 
     for (const term of terms) {
-      const postings = this._postings.get(term);
-      if (!postings) continue;
-      const idf = Math.log(1 + N / postings.size); // rarer term -> higher idf
-      for (const [docId, tf] of postings) {
-        const hit = hits.get(docId) ?? { score: 0, matched: new Set() };
-        hit.score += tf * idf;
-        hit.matched.add(term);
-        hits.set(docId, hit);
+      for (const { postings, prefixRatio } of this._postingsForTerm(term)) {
+        const idf = Math.log(1 + N / postings.size); // rarer term -> higher idf
+        for (const [docId, tf] of postings) {
+          const hit = hits.get(docId) ?? { score: 0, matched: new Set() };
+          hit.score += tf * idf * prefixRatio;
+          hit.matched.add(term);
+          hits.set(docId, hit);
+        }
       }
     }
 
@@ -95,6 +98,23 @@ export class SearchIndex {
       }))
       .sort((a, b) => b.score - a.score)
       .slice(0, limit);
+  }
+
+  /**
+   * Find postings for a query term: exact match first, then prefix fallback.
+   * Returns an array of `{ postings, prefixRatio }` where `prefixRatio` is 1
+   * for an exact match and `queryLen / tokenLen` (< 1) for a prefix match,
+   * so longer, more complete matches contribute more to the score.
+   * @private
+   */
+  _postingsForTerm(term) {
+    const exact = this._postings.get(term);
+    if (exact) return [{ postings: exact, prefixRatio: 1 }];
+    const results = [];
+    for (const [key, postings] of this._postings) {
+      if (key.startsWith(term)) results.push({ postings, prefixRatio: term.length / key.length });
+    }
+    return results;
   }
 }
 
