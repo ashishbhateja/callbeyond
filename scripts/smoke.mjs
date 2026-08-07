@@ -154,4 +154,18 @@ check('search matches an author name', () => {
   assert.ok(hits[0].matched.includes('nirodbaran'));
 });
 
+check('prefix search finds an article before the full word is typed', () => {
+  const idx = new SearchIndex().build(articles);
+  const hits = idx.search('equanim'); // leading substring of 'equanimity'
+  assert.ok(hits.length > 0);
+  assert.equal(hits[0].article.id, 'the-mother-on-equanimity');
+});
+
+check('prefix match reports the query term in matched, not the expanded token', () => {
+  const idx = new SearchIndex().build(articles);
+  const hits = idx.search('equanim');
+  assert.ok(hits.length > 0);
+  assert.ok(hits[0].matched.includes('equanim'));
+});
+
 console.log(`\n${passed} checks passed.`);
