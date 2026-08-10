@@ -144,6 +144,7 @@ function renderJourney() {
         btn.classList.add('is-current');
         btn.setAttribute('aria-current', 'date');
       }
+      btn.setAttribute('aria-label', `${month.name}: ${month.theme}`);
       btn.append(tag('span', 'arc-month-name', month.name.slice(0, 3)));
       btn.append(tag('span', 'arc-month-theme', month.theme));
       btn.addEventListener('click', () => selectMonth(month.number));
