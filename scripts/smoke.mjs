@@ -154,4 +154,21 @@ check('search matches an author name', () => {
   assert.ok(hits[0].matched.includes('nirodbaran'));
 });
 
+check('tokenize strips diacritics so Śrī → sri', () => {
+  assert.deepEqual(tokenize('Śrī Aurobindo'), ['sri', 'aurobindo']);
+});
+
+check('tokenize strips diacritics so Pondichéry → pondichery', () => {
+  assert.deepEqual(tokenize('Pondichéry'), ['pondichery']);
+});
+
+check('search finds diacritical content via ASCII query', () => {
+  const idx = new SearchIndex().build([
+    { title: 'Śrī Aurobindo and Integral Yoga', themes: ['Integral Yoga'], author: 'Editorial', summary: 'x', body: 'y' },
+  ]);
+  const hits = idx.search('Sri');
+  assert.equal(hits.length, 1);
+  assert.ok(hits[0].matched.includes('sri'));
+});
+
 console.log(`\n${passed} checks passed.`);
