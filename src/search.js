@@ -98,9 +98,15 @@ export class SearchIndex {
   }
 }
 
-/** Lowercase, split on non-word characters, drop stop words and single chars. */
+/**
+ * Lowercase, split on non-word characters, drop stop words and single chars.
+ * NFD-normalizes first so diacritical variants (Śrī → sri, Pondichéry →
+ * pondichery) are searchable via their ASCII equivalents.
+ */
 export function tokenize(text) {
   return String(text)
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
     .split(/[^a-z0-9]+/)
     .filter((t) => t.length > 1 && !STOP_WORDS.has(t));
